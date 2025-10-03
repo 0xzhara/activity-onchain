@@ -24,10 +24,8 @@ export default function App() {
       <div style={{ fontFamily: "Inter, Arial, sans-serif", maxWidth: 900, margin: "0 auto" }}>
         <Navbar />
 
-        <section id="home">
-          <h1>Contributions — AppKit (WalletConnect)</h1>
-          {/* ✅ ProjectId dihapus */}
-        </section>
+        {/* ✅ Bagian Home sudah tidak ada judul lagi */}
+        <section id="home"></section>
 
         <section id="activity" style={{ marginTop: 40 }}>
           <h2>Activity</h2>
