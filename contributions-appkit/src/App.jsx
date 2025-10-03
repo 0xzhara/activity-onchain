@@ -26,7 +26,7 @@ export default function App() {
 
         <section id="home">
           <h1>Contributions — AppKit (WalletConnect)</h1>
-          <p>ProjectId: <code>{import.meta.env.VITE_WALLETCONNECT_PROJECT_ID}</code></p>
+          {/* ✅ ProjectId dihapus */}
         </section>
 
         <section id="activity" style={{ marginTop: 40 }}>
