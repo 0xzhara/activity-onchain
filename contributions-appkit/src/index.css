@@ -1,5 +1,40 @@
 /* src/index.css */
-body { font-family: Inter, Arial, sans-serif; padding: 20px; }
-input { padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
-button { padding: 8px 12px; border-radius: 8px; border: none; background: #2563eb; color: white; cursor: pointer; }
-button:disabled { opacity: 0.6; cursor: not-allowed; }
+body {
+  font-family: Inter, Arial, sans-serif;
+  padding: 20px;
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+input {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: inherit;
+  color: inherit;
+}
+
+button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+body.dark button {
+  background: #3b82f6;
+}
