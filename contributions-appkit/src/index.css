@@ -10,6 +10,7 @@ body {
 
 body.dark { background: #121212; color: #e0e0e0; }
 
+/* === BUTTONS === */
 button {
   padding: 8px 12px;
   border-radius: 8px;
@@ -19,22 +20,24 @@ button {
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
-
 button:hover { transform: scale(1.05); }
 button:active { transform: scale(0.95); }
 
+.btn-primary { background: #2563eb; color: #fff; }
+.btn-success { background: #16a34a; color: #fff; }
+.btn-secondary { background: #6b7280; color: #fff; }
+
+.btn-primary:hover, .btn-success:hover, .btn-secondary:hover {
+  opacity: 0.9;
+}
+
+/* Theme toggle animation */
 .theme-toggle.animate { animation: rotate 0.5s ease; }
 @keyframes rotate { to { transform: rotate(360deg); } }
 
-/* Navbar */
-.hamburger { 
-  display: none; 
-  color: inherit;   /* ikut warna teks body */
-  transition: transform 0.3s ease;
-}
-.hamburger.open {
-  transform: rotate(90deg); /* animasi saat berubah jadi X */
-}
+/* === NAVBAR === */
+.hamburger { display: none; color: inherit; transition: transform 0.3s ease; }
+.hamburger.open { transform: rotate(90deg); }
 
 .menu-mobile { display: none; }
 
@@ -58,22 +61,58 @@ button:active { transform: scale(0.95); }
     transition: opacity 0.3s, transform 0.3s;
     z-index: 1000;
   }
-  body.dark .menu-mobile {
-    background: #1e1e1e;
-    border-color: #444;
-  }
-  .menu-mobile.open {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
+  body.dark .menu-mobile { background: #1e1e1e; border-color: #444; }
+  .menu-mobile.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
 }
 
-/* Section fade-in */
+/* === SECTIONS & CARDS === */
 section { opacity:0; transform:translateY(20px); transition:0.8s; }
 section.visible { opacity:1; transform:translateY(0); }
 
-/* Toast */
+.card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+.card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
+body.dark .card { background: #1e1e1e; border-color: #333; }
+
+.card h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* spacing antar elemen dalam card */
+.card > *:not(:last-child) { margin-bottom: 12px; }
+
+/* === INPUTS === */
+input, textarea, select {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s, background-color 0.3s;
+}
+input:focus, textarea:focus, select:focus { border-color: #2563eb; }
+body.dark input, body.dark textarea, body.dark select {
+  background: #2a2a2a; border-color: #444; color: #eee;
+}
+
+/* Form Row */
+.form-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.form-row input, .form-row select { flex: 1; }
+
+/* === TOAST === */
 .toast-container { position:fixed; top:20px; right:20px; display:flex; flex-direction:column; gap:10px; z-index:3000; }
 .toast { padding:10px 16px; border-radius:6px; font-weight:500; animation:slideIn 0.3s, fadeOut 0.5s 2.5s forwards; }
 .toast.success { background:#4caf50; color:#fff; }
@@ -82,7 +121,7 @@ section.visible { opacity:1; transform:translateY(0); }
 @keyframes slideIn { from{opacity:0; transform:translateX(120%);} to{opacity:1; transform:translateX(0);} }
 @keyframes fadeOut { to{opacity:0; transform:translateX(120%);} }
 
-/* Loading Overlay */
+/* === LOADING OVERLAY === */
 .loading-overlay {
   position:fixed; top:0; left:0; width:100%; height:100%;
   background:rgba(20,20,20,0.6); backdrop-filter:blur(3px);
@@ -96,3 +135,14 @@ section.visible { opacity:1; transform:translateY(0); }
   animation:spin 1s linear infinite; margin-bottom:16px;
 }
 @keyframes spin { to{transform:rotate(360deg);} }
+
+/* === FOOTER === */
+footer {
+  text-align: center;
+  margin-top: 50px;
+  padding: 20px;
+  font-size: 14px;
+  color: #666;
+  border-top: 1px solid #ddd;
+}
+body.dark footer { border-top: 1px solid #333; color: #aaa; }

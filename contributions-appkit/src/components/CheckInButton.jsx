@@ -1,51 +1,48 @@
 // src/components/CheckInButton.jsx
-import React from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../lib/abi";
+import React, { useState } from "react";
+import { useAccount, useWalletClient } from "wagmi";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../lib/abi";
+import { ethers } from "ethers";
+import { useUI } from "../context/UIContext";
+import { useLog } from "../context/LogContext";   // ✅ pakai LogContext
 
-export default function CheckInButton() {
-  const { address, isConnected } = useAccount();
-  const { data: hash, writeContract } = useWriteContract();
-  const { isLoading, isSuccess, isError } = useWaitForTransactionReceipt({ hash });
+export default function CheckInButton({ className = "btn-success" }) {
+  const { isConnected } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const { showToast } = useUI();
+  const { addContractLog } = useLog();  // ✅ ambil function log
+  const [loading, setLoading] = useState(false);
 
   const handleCheckIn = async () => {
-    if (!isConnected) {
-      alert("⚠️ Please connect your wallet first!");
+    if (!isConnected || !walletClient) {
+      showToast("Please connect wallet", "error");
+      addContractLog("❌ Check-in failed (wallet not connected)");
       return;
     }
 
     try {
-      await writeContract({
-        address: CONTRACT_ADDRESS,
-        abi: CONTRACT_ABI,
-        functionName: "dailyCheckIn", // ✅ perbaikan: sesuai ABI
-        account: address,
-      });
+      setLoading(true);
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+
+      const tx = await contract.dailyCheckIn();
+      await tx.wait();
+
+      showToast("✅ Check-in successful!", "success");
+      addContractLog("✅ Daily check-in successful!");
     } catch (err) {
-      console.error("❌ Check-in failed:", err);
-      alert("Check-in failed, lihat console untuk detail error.");
+      console.error(err);
+      showToast("❌ Check-in failed", "error");
+      addContractLog("❌ Daily check-in failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <button
-        onClick={handleCheckIn}
-        disabled={isLoading || !isConnected}
-        style={{
-          padding: "10px 20px",
-          borderRadius: "8px",
-          backgroundColor: isLoading ? "#ccc" : "#4CAF50",
-          color: "white",
-          fontWeight: "bold",
-          cursor: isLoading ? "not-allowed" : "pointer",
-        }}
-      >
-        {isLoading ? "Processing..." : "Check In"}
-      </button>
-
-      {isSuccess && <p>✅ Check-in success!</p>}
-      {isError && <p>❌ Check-in failed. Please try again.</p>}
-    </div>
+    <button className={className} onClick={handleCheckIn} disabled={loading}>
+      {loading ? "Checking in..." : "Check In"}
+    </button>
   );
 }

@@ -5,9 +5,10 @@ import CheckInButton from "./components/CheckInButton";
 import VoteForm from "./components/VoteForm";
 import CreateProposalForm from "./components/CreateProposalForm";
 import SendMessageForm from "./components/SendMessageForm";
-import WalletActivityLog from "./components/WalletActivityLog";
 import Navbar from "./components/Navbar";
 import { UIProvider } from "./context/UIContext";
+import { LogProvider } from "./context/LogContext";
+import ActivityTabs from "./components/ActivityTabs";
 
 export default function App() {
   useEffect(() => {
@@ -21,31 +22,34 @@ export default function App() {
 
   return (
     <UIProvider>
-      <div style={{ fontFamily: "Inter, Arial, sans-serif", maxWidth: 900, margin: "0 auto" }}>
-        <Navbar />
+      <LogProvider>
+        <div style={{ fontFamily: "Inter, Arial, sans-serif", maxWidth: 900, margin: "0 auto" }}>
+          <Navbar />
 
-        {/* ✅ Bagian Home sudah tidak ada judul lagi */}
-        <section id="home"></section>
+          <section id="activity" className="card">
+            <h2>Activity</h2>
+            <ConnectButton />
+            <AccountInfo />
+            <ActivityTabs /> {/* ✅ sekarang hanya Contract Log */}
+          </section>
 
-        <section id="activity" style={{ marginTop: 40 }}>
-          <h2>Activity</h2>
-          <ConnectButton />
-          <AccountInfo />
-          <WalletActivityLog />
-        </section>
+          <section id="proposals" className="card">
+            <h2>Proposals</h2>
+            <CheckInButton className="btn-success" />
+            <VoteForm />
+            <CreateProposalForm />
+          </section>
 
-        <section id="proposals" style={{ marginTop: 40 }}>
-          <h2>Proposals</h2>
-          <CheckInButton />
-          <VoteForm />
-          <CreateProposalForm />
-        </section>
+          <section id="messages" className="card">
+            <h2>Messages</h2>
+            <SendMessageForm />
+          </section>
 
-        <section id="messages" style={{ marginTop: 40 }}>
-          <h2>Messages</h2>
-          <SendMessageForm />
-        </section>
-      </div>
+          <footer>
+            Made with ❤️ by <strong>0xzhara</strong>
+          </footer>
+        </div>
+      </LogProvider>
     </UIProvider>
   );
 }

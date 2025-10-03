@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
-  });
-
-  const [animate, setAnimate] = useState(false);
+  const [dark, setDark] = useState(() => localStorage.getItem("theme") === "dark");
 
   useEffect(() => {
-    if (darkMode) {
+    if (dark) {
       document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     } else {
       document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
     }
-    localStorage.setItem("darkMode", darkMode);
-
-    setAnimate(true);
-    const timeout = setTimeout(() => setAnimate(false), 500);
-    return () => clearTimeout(timeout);
-  }, [darkMode]);
+  }, [dark]);
 
   return (
     <button
-      onClick={() => setDarkMode(!darkMode)}
-      className={`theme-toggle ${animate ? "animate" : ""}`}
+      className="btn-primary theme-toggle"
+      onClick={() => setDark(!dark)}
+      style={{ display: "flex", alignItems: "center", gap: "6px" }}
     >
-      {darkMode ? "☀️ Light" : "🌙 Dark"}
+      {dark ? "☀️ Light" : "🌙 Dark"}
     </button>
   );
 }

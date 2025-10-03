@@ -3,12 +3,11 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
+  const [activeSection, setActiveSection] = useState("activity");
 
+  // ✅ sekarang menu hanya Home & Activity
   const menuLinks = [
     { name: "Home", href: "#home", id: "home" },
-    { name: "Proposals", href: "#proposals", id: "proposals" },
-    { name: "Messages", href: "#messages", id: "messages" },
     { name: "Activity", href: "#activity", id: "activity" },
   ];
 
@@ -42,29 +41,25 @@ export default function Navbar() {
         zIndex: 100,
       }}
     >
-      {/* Logo kiri */}
-      <h2 style={{ margin: 0, display: "flex", alignItems: "center", gap: "6px" }}>
-        🌐 Onchain <span style={{ fontWeight: "700" }}>Dashboard</span>
-      </h2>
+      <h2 style={{ margin: 0 }}>🌐 Onchain Dashboard</h2>
 
-      {/* Tombol hamburger */}
+      {/* Burger menu for mobile */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`hamburger ${isOpen ? "open" : ""}`}
+        className="hamburger"
         style={{
           display: "none",
           background: "transparent",
           border: "none",
           fontSize: "24px",
           cursor: "pointer",
-          color: "inherit", // ikut warna teks body
         }}
       >
-        {isOpen ? "✖" : "☰"}
+        ☰
       </button>
 
-      {/* Menu desktop */}
-      <div className="menu-desktop" style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+      {/* Desktop menu */}
+      <div className="menu-desktop" style={{ display: "flex", gap: "16px", alignItems: "center" }}>
         {menuLinks.map((link) => (
           <a
             key={link.id}
@@ -83,7 +78,7 @@ export default function Navbar() {
         <ThemeToggle />
       </div>
 
-      {/* Menu mobile */}
+      {/* Mobile menu */}
       <div className={`menu-mobile ${isOpen ? "open" : ""}`}>
         {menuLinks.map((link) => (
           <a

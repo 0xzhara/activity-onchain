@@ -1,40 +1,48 @@
 import React, { useState } from "react";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../lib/abi";
+import { useWalletClient } from "wagmi";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../lib/abi";
+import { ethers } from "ethers";
+import { useUI } from "../context/UIContext";
 
 export default function VoteForm() {
   const [proposalId, setProposalId] = useState("");
-  const [vote, setVote] = useState(true);
+  const [voteYes, setVoteYes] = useState(true);
+  const { data: walletClient } = useWalletClient();
+  const { showToast } = useUI();
 
-  const { data: hash, writeContract } = useWriteContract();
-  const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const handleVote = async () => {
+    if (!proposalId) return showToast("Enter proposal ID", "error");
+    try {
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-  const handleVote = (e) => {
-    e.preventDefault();
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "vote",
-      args: [proposalId, vote],
-    });
+      const tx = await contract.vote(proposalId, voteYes);
+      await tx.wait();
+
+      showToast("✅ Vote submitted", "success");
+      setProposalId("");
+    } catch (err) {
+      console.error(err);
+      showToast("❌ Vote failed", "error");
+    }
   };
 
   return (
-    <form onSubmit={handleVote}>
+    <div className="form-row">
       <input
-        type="text"
+        type="number"
         placeholder="Proposal ID"
         value={proposalId}
         onChange={(e) => setProposalId(e.target.value)}
       />
-      <select value={vote} onChange={(e) => setVote(e.target.value === "true")}>
+      <select value={voteYes} onChange={(e) => setVoteYes(e.target.value === "true")}>
         <option value="true">Yes</option>
         <option value="false">No</option>
       </select>
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Voting..." : "Vote"}
+      <button className="btn-primary" onClick={handleVote}>
+        Vote
       </button>
-      {isSuccess && <p>✅ Vote submitted!</p>}
-    </form>
+    </div>
   );
 }

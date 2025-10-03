@@ -1,35 +1,43 @@
 import React, { useState } from "react";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../lib/abi";
+import { useWalletClient } from "wagmi";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../lib/abi";
+import { ethers } from "ethers";
+import { useUI } from "../context/UIContext";
 
 export default function CreateProposalForm() {
   const [description, setDescription] = useState("");
+  const { data: walletClient } = useWalletClient();
+  const { showToast } = useUI();
 
-  const { data: hash, writeContract } = useWriteContract();
-  const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const handleCreate = async () => {
+    if (!description) return showToast("Enter proposal description", "error");
+    try {
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "createProposal",
-      args: [description],
-    });
+      const tx = await contract.createProposal(description);
+      await tx.wait();
+
+      showToast("✅ Proposal created", "success");
+      setDescription("");
+    } catch (err) {
+      console.error(err);
+      showToast("❌ Failed to create proposal", "error");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="form-row" style={{ marginTop: "8px" }}>
       <input
         type="text"
         placeholder="Proposal description..."
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Submitting..." : "Create Proposal"}
+      <button className="btn-primary" onClick={handleCreate}>
+        Create Proposal
       </button>
-      {isSuccess && <p>✅ Proposal created!</p>}
-    </form>
+    </div>
   );
 }

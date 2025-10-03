@@ -1,38 +1,43 @@
 import React, { useState } from "react";
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "../lib/abi";
+import { useWalletClient } from "wagmi";
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../lib/abi";
+import { ethers } from "ethers";
+import { useUI } from "../context/UIContext";
 
 export default function SendMessageForm() {
   const [message, setMessage] = useState("");
-  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const { showToast } = useUI();
 
-  const { data: hash, writeContract } = useWriteContract();
-  const { isLoading, isSuccess } = useWaitForTransactionReceipt({ hash });
+  const handleSend = async () => {
+    if (!message) return showToast("Enter a message", "error");
+    try {
+      const provider = new ethers.BrowserProvider(walletClient);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!message) return;
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "sendMessage",
-      args: [message],
-    });
+      const tx = await contract.sendMessage(message);
+      await tx.wait();
+
+      showToast("✅ Message sent", "success");
+      setMessage("");
+    } catch (err) {
+      console.error(err);
+      showToast("❌ Failed to send message", "error");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className="form-row">
       <input
         type="text"
         placeholder="Enter message..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
-      <button type="submit" disabled={isLoading}>
-        {isLoading ? "Sending..." : "Send"}
+      <button className="btn-primary" onClick={handleSend}>
+        Send
       </button>
-
-      {isSuccess && <p>✅ Message sent successfully!</p>}
-    </form>
+    </div>
   );
 }
