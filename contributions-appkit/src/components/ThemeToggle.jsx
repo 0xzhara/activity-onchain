@@ -1,10 +1,11 @@
-// src/components/ThemeToggle.jsx
 import React, { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
+
+  const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
     if (darkMode) {
@@ -13,23 +14,18 @@ export default function ThemeToggle() {
       document.body.classList.remove("dark");
     }
     localStorage.setItem("darkMode", darkMode);
+
+    setAnimate(true);
+    const timeout = setTimeout(() => setAnimate(false), 500);
+    return () => clearTimeout(timeout);
   }, [darkMode]);
 
   return (
     <button
       onClick={() => setDarkMode(!darkMode)}
-      style={{
-        marginBottom: 20,
-        padding: "8px 16px",
-        borderRadius: "6px",
-        border: "none",
-        cursor: "pointer",
-        backgroundColor: darkMode ? "#f0f0f0" : "#333",
-        color: darkMode ? "#000" : "#fff",
-        fontWeight: "bold",
-      }}
+      className={`theme-toggle ${animate ? "animate" : ""}`}
     >
-      {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      {darkMode ? "☀️ Light" : "🌙 Dark"}
     </button>
   );
 }
