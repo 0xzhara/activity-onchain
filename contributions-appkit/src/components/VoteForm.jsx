@@ -6,25 +6,27 @@ import { useUI } from "../context/UIContext";
 
 export default function VoteForm() {
   const [proposalId, setProposalId] = useState("");
-  const [voteYes, setVoteYes] = useState(true);
   const { data: walletClient } = useWalletClient();
   const { showToast } = useUI();
 
   const handleVote = async () => {
+    if (!walletClient) return showToast("⚠️ Please connect wallet first", "error");
     if (!proposalId) return showToast("Enter proposal ID", "error");
+
     try {
       const provider = new ethers.BrowserProvider(walletClient);
       const signer = await provider.getSigner();
       const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-      const tx = await contract.vote(proposalId, voteYes);
+      // ✅ Panggil vote hanya dengan proposalId
+      const tx = await contract.vote(BigInt(proposalId));
       await tx.wait();
 
       showToast("✅ Vote submitted", "success");
       setProposalId("");
     } catch (err) {
-      console.error(err);
-      showToast("❌ Vote failed", "error");
+      console.error("Vote error:", err);
+      showToast("❌ Vote failed: " + (err.message || "Unknown error"), "error");
     }
   };
 
@@ -36,10 +38,6 @@ export default function VoteForm() {
         value={proposalId}
         onChange={(e) => setProposalId(e.target.value)}
       />
-      <select value={voteYes} onChange={(e) => setVoteYes(e.target.value === "true")}>
-        <option value="true">Yes</option>
-        <option value="false">No</option>
-      </select>
       <button className="btn-primary" onClick={handleVote}>
         Vote
       </button>

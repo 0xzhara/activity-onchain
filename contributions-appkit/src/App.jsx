@@ -5,6 +5,7 @@ import { UIProvider } from "./context/UIContext";
 import { LogProvider } from "./context/LogContext";
 import HomeStats from "./components/HomeStats";
 import Activity from "./pages/Activity";
+import Proposals from "./pages/Proposals"; // ✅ import
 
 export default function App() {
   return (
@@ -14,7 +15,6 @@ export default function App() {
           <Navbar />
 
           <Routes>
-            {/* ✅ Home route */}
             <Route path="/" element={
               <div className="card">
                 <h2>Dashboard</h2>
@@ -22,8 +22,8 @@ export default function App() {
               </div>
             } />
 
-            {/* ✅ Activity route */}
             <Route path="/activity" element={<Activity />} />
+            <Route path="/proposals" element={<Proposals />} /> {/* ✅ route baru */}
           </Routes>
         </div>
       </LogProvider>

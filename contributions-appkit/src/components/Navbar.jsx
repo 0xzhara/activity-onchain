@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import ConnectButton from "./ConnectButton";
-import { Home, ListTodo } from "lucide-react";
+import { Home, ListTodo, ScrollText } from "lucide-react"; // ✅ ScrollText untuk icon proposal
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-
   const menuLinks = [
     { name: "Home", to: "/", icon: <Home size={16} /> },
-    { name: "Activity Mainet", to: "/activity", icon: <ListTodo size={16} /> },
+    { name: "Activity", to: "/activity", icon: <ListTodo size={16} /> },
+    { name: "Proposals", to: "/proposals", icon: <ScrollText size={16} /> }, // ✅ baru
   ];
 
   return (
@@ -21,10 +20,8 @@ export default function Navbar() {
         margin: "16px 0",
       }}
     >
-      {/* Logo / Title */}
       <div style={{ fontWeight: 700, fontSize: 20 }}>Onchain Dashboard</div>
 
-      {/* Tengah: Menu & Theme */}
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
         {menuLinks.map((link) => (
           <NavLink
@@ -42,13 +39,11 @@ export default function Navbar() {
               color: isActive ? "#fff" : "#ccc",
               transition: "all 0.2s ease-in-out",
             })}
-            onClick={() => setIsOpen(false)}
           >
             {link.icon}
             {link.name}
           </NavLink>
         ))}
-
         <ThemeToggle />
       </div>
 
