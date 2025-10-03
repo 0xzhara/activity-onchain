@@ -1,0 +1,5 @@
+/* src/index.css */
+body { font-family: Inter, Arial, sans-serif; padding: 20px; }
+input { padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; }
+button { padding: 8px 12px; border-radius: 8px; border: none; background: #2563eb; color: white; cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
