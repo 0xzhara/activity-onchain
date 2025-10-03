@@ -47,19 +47,20 @@ export default function Navbar() {
         🌐 Onchain <span style={{ fontWeight: "700" }}>Dashboard</span>
       </h2>
 
-      {/* Tombol hamburger untuk mobile */}
+      {/* Tombol hamburger */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="hamburger"
+        className={`hamburger ${isOpen ? "open" : ""}`}
         style={{
           display: "none",
           background: "transparent",
           border: "none",
           fontSize: "24px",
           cursor: "pointer",
+          color: "inherit", // ikut warna teks body
         }}
       >
-        ☰
+        {isOpen ? "✖" : "☰"}
       </button>
 
       {/* Menu desktop */}
