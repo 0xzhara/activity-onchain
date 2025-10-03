@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
-import ConnectButton from "./ConnectButton";   // ✅ Tambahkan ini
+import ConnectButton from "./ConnectButton";
+import { Home, Activity } from "lucide-react"; // ✅ Tambah icon
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuLinks = [
-    { name: "Home", to: "/" },
-    { name: "Activity", to: "/activity" },
+    { name: "Home", to: "/", icon: <Home size={16} /> },
+    { name: "Activity", to: "/activity", icon: <Activity size={16} /> },
   ];
 
   return (
@@ -28,12 +29,20 @@ export default function Navbar() {
             key={link.to}
             to={link.to}
             style={({ isActive }) => ({
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              padding: "6px 12px",
+              borderRadius: "12px",
               textDecoration: "none",
-              fontWeight: isActive ? 700 : 500,
-              color: isActive ? "#2563eb" : "inherit",
+              fontWeight: 600,
+              background: isActive ? "#2563eb" : "#2d2d2d",
+              color: isActive ? "#fff" : "#ccc",
+              transition: "all 0.2s ease-in-out",
             })}
             onClick={() => setIsOpen(false)}
           >
+            {link.icon}
             {link.name}
           </NavLink>
         ))}
