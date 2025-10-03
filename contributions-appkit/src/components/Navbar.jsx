@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import ConnectButton from "./ConnectButton";
-import { Home, Activity } from "lucide-react"; // ✅ Tambah icon
+import { Home, ListTodo } from "lucide-react"; // ✅ icon
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuLinks = [
     { name: "Home", to: "/", icon: <Home size={16} /> },
-    { name: "Activity", to: "/activity", icon: <Activity size={16} /> },
+    { name: "Activity", to: "/activity", icon: <ListTodo size={16} /> },
   ];
 
   return (
@@ -50,6 +50,7 @@ export default function Navbar() {
         {/* ✅ Connect Wallet di Navbar */}
         <ConnectButton />
 
+        {/* Dark Mode Toggle */}
         <ThemeToggle />
       </div>
     </nav>
