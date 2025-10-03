@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import ConnectButton from "./ConnectButton";
-import { Home, ListTodo } from "lucide-react"; // ✅ icon
+import { Home, ListTodo } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,8 +21,10 @@ export default function Navbar() {
         margin: "16px 0",
       }}
     >
+      {/* Logo / Title */}
       <div style={{ fontWeight: 700, fontSize: 20 }}>Onchain Dashboard</div>
 
+      {/* Tengah: Menu & Theme */}
       <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
         {menuLinks.map((link) => (
           <NavLink
@@ -47,11 +49,12 @@ export default function Navbar() {
           </NavLink>
         ))}
 
-        {/* ✅ Connect Wallet di Navbar */}
-        <ConnectButton />
-
-        {/* Dark Mode Toggle */}
         <ThemeToggle />
+      </div>
+
+      {/* Kanan: Connect Wallet */}
+      <div>
+        <ConnectButton />
       </div>
     </nav>
   );

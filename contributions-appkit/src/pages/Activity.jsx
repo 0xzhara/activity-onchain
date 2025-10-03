@@ -9,7 +9,7 @@ import SendMessageForm from "../components/SendMessageForm";
 export default function Activity() {
   return (
     <div className="card">
-      <h2>Activity</h2>
+      <h2>Activity Base</h2>
       <AccountInfo />
 
       {/* Check-in harian */}

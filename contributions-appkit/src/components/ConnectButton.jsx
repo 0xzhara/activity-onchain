@@ -3,7 +3,7 @@ import { AppKitButton } from "@reown/appkit/react";
 
 export default function ConnectButton() {
   return (
-    <div style={{ marginBottom: "12px" }}>
+    <div style={{ marginBottom: "2px" }}>
       {/* Ini tombol bawaan dari AppKit (WalletConnect modal) */}
       <AppKitButton label="Connect Wallet" />
     </div>
