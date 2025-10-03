@@ -1,11 +1,13 @@
 // src/lib/appkit-init.js
 import { createAppKit } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
+import { mainnet } from "viem/chains";
 
-// 🔹 WalletConnect Project ID
-const projectId = "7e62c15febbe250cd8c4a5b3eec994ee";
+const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID;
+if (!projectId) {
+  throw new Error("❌ WalletConnect Project ID missing");
+}
 
-// 🔹 Base Mainnet chain info
 const baseMainnet = {
   id: 8453,
   name: "Base",
@@ -19,24 +21,21 @@ const baseMainnet = {
 const metadata = {
   name: "Contributions DApp",
   description: "WalletConnect + Base contract demo",
-  url: "https://your-dapp-url.vercel.app", // ganti ke URL deploy kamu
+  url: window.location.origin, // ✅ otomatis sesuai domain Vercel
   icons: ["https://avatars.githubusercontent.com/u/37784886"]
 };
 
-// 🔹 Buat adapter Wagmi
 export const wagmiAdapter = new WagmiAdapter({
   projectId,
-  networks: [baseMainnet],
+  networks: [mainnet, baseMainnet], // ✅ include mainnet dulu
   metadata
 });
 
-// 🔹 Ambil wagmiConfig untuk WagmiProvider
 export const wagmiConfig = wagmiAdapter.wagmiConfig;
 
-// 🔹 Buat AppKit modal (pastikan networks di-pass)
 createAppKit({
   adapters: [wagmiAdapter],
   projectId,
   metadata,
-  networks: [baseMainnet] // ✅ wajib ada
+  networks: [mainnet, baseMainnet]
 });
