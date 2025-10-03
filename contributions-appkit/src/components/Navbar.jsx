@@ -9,7 +9,7 @@ export default function Navbar() {
 
   const menuLinks = [
     { name: "Home", to: "/", icon: <Home size={16} /> },
-    { name: "Activity", to: "/activity", icon: <ListTodo size={16} /> },
+    { name: "Activity Mainet", to: "/activity", icon: <ListTodo size={16} /> },
   ];
 
   return (
