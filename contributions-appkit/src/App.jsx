@@ -6,6 +6,7 @@ import CheckInButton from "./components/CheckInButton";
 import VoteForm from "./components/VoteForm";
 import CreateProposalForm from "./components/CreateProposalForm";
 import SendMessageForm from "./components/SendMessageForm";
+import WalletActivityLog from "./components/WalletActivityLog";
 
 export default function App() {
   return (
@@ -14,9 +15,11 @@ export default function App() {
       <p>ProjectId: <code>{import.meta.env.VITE_WALLETCONNECT_PROJECT_ID}</code></p>
 
       <section style={{ marginTop: 12 }}>
-        <ConnectButton />
-        <AccountInfo />
-      </section>
+  <ConnectButton />
+  <AccountInfo />
+  <WalletActivityLog />   {/* Tambahan baru */}
+</section>
+
 
       <hr style={{ margin: "20px 0" }} />
 
