@@ -1,38 +1,45 @@
 // src/components/CheckInButton.jsx
 import React, { useState } from "react";
-import { useAccount, useWalletClient } from "wagmi";
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from "../lib/abi";
+import { useAccount, useWalletClient, useChainId } from "wagmi";
 import { ethers } from "ethers";
 import { useUI } from "../context/UIContext";
-import { useLog } from "../context/LogContext";   // ✅ pakai LogContext
+import { useLog } from "../context/LogContext";
+import { contracts } from "../lib/contract-config"; // ✅ pakai config multi-chain
 
 export default function CheckInButton({ className = "btn-success" }) {
   const { isConnected } = useAccount();
+  const chainId = useChainId();
   const { data: walletClient } = useWalletClient();
   const { showToast } = useUI();
-  const { addContractLog } = useLog();  // ✅ ambil function log
+  const { addContractLog } = useLog();
   const [loading, setLoading] = useState(false);
 
   const handleCheckIn = async () => {
     if (!isConnected || !walletClient) {
-      showToast("Please connect wallet", "error");
+      showToast("⚠️ Please connect wallet", "error");
       addContractLog("❌ Check-in failed (wallet not connected)");
       return;
     }
 
     try {
       setLoading(true);
+
       const provider = new ethers.BrowserProvider(walletClient);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-      const tx = await contract.dailyCheckIn();
+      // ✅ Deteksi chain aktif (Base / Celo)
+      const network = chainId === 42220 ? "celo" : "base";
+      const contractInfo = contracts[network];
+      const contract = new ethers.Contract(contractInfo.address, contractInfo.abi, signer);
+
+      // ✅ Panggil fungsi sesuai kontrak aktif
+      const tx = await contract.checkIn();
       await tx.wait();
 
-      showToast("✅ Check-in successful!", "success");
-      addContractLog("✅ Daily check-in successful!");
+      showToast(`✅ Check-in successful on ${network.toUpperCase()}!`, "success");
+      addContractLog(`✅ Daily check-in successful on ${network.toUpperCase()}`);
     } catch (err) {
-      console.error(err);
+      console.error("❌ TX error:", err);
       showToast("❌ Check-in failed", "error");
       addContractLog("❌ Daily check-in failed");
     } finally {
@@ -42,7 +49,7 @@ export default function CheckInButton({ className = "btn-success" }) {
 
   return (
     <button className={className} onClick={handleCheckIn} disabled={loading}>
-      {loading ? "Checking in..." : "Check In"}
+      {loading ? "⏳ Checking in..." : "🔥 Check In (Onchain)"}
     </button>
   );
 }

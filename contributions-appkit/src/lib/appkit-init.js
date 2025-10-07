@@ -9,7 +9,7 @@ if (!projectId) {
   throw new Error("❌ Missing WalletConnect Project ID. Please set VITE_WALLETCONNECT_PROJECT_ID in .env");
 }
 
-// ✅ Define Base network
+// ✅ Base Rpc
 const baseMainnet = {
   id: 8453,
   name: "Base Mainnet",
@@ -32,7 +32,7 @@ const baseMainnet = {
   },
 };
 
-// ✅ Define Celo network (for future expansion / rewards eligibility)
+// ✅ Celo Rpc
 const celoMainnet = {
   id: 42220,
   name: "Celo Mainnet",
@@ -55,7 +55,7 @@ const celoMainnet = {
   },
 };
 
-// ✅ WalletConnect Metadata (important for Builder Rewards)
+// ✅ Metadata
 const metadata = {
   name: "Activity Onchain App",
   description: "A decentralized app for tracking contributions, proposals, and onchain activity — built with Reown AppKit & WalletConnect.",
@@ -64,7 +64,7 @@ const metadata = {
   contactEmail: "wildanapdol@gmail.com", // 🟢 must match your WalletConnect registration email
 };
 
-// ✅ Initialize Wagmi Adapter (used by AppKit)
+// ✅ Wagmi adapter
 export const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks: [mainnet, baseMainnet, celoMainnet],
